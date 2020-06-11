@@ -6,7 +6,6 @@ class User(abc.ABC):
         self.username = username
         self.password = password
         
-
 class SuperAdmin(User):
     def __init__(self, username, password):
         super().__init__(username, password)
@@ -26,8 +25,6 @@ class SysAdmin(User):
     def createAdvisor(self, username, password):
         Db.create_user(username, password, "advisor")
         print("Advisor has been created.")
-        
-
 
 class Advisor(User):
     def __init__(self, username, password):
