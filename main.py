@@ -6,6 +6,7 @@ class User(abc.ABC):
         self.username = username
         self.password = password
         
+
 class SuperAdmin(User):
     def __init__(self, username, password):
         super().__init__(username, password)
@@ -22,6 +23,10 @@ class Advisor(User):
     def __init__(self, username, password):
         super().__init__(username, password)
         self.accessLevel = "advisor"
+
+
+def Login(username, password):
+    pass
 
 
 def main():

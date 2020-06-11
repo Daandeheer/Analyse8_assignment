@@ -29,27 +29,39 @@ def create_table(conn, create_table_sql):
         print(e)
 
 def create_user_table(conn):
-    sql_user_table = """ CREATE TABLE IF NOT EXISTS users (
+    sql = """ CREATE TABLE IF NOT EXISTS users (
                         user_id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL,
                         password TEXT NOT NULL,
                         accesslevel TEXT NOT NULL
                     );
                     """
-    create_table(conn, sql_user_table)
+    create_table(conn, sql)
 
 def create_client_table(conn):
-    sql_client_table = """ CREATE TABLE IF NOT EXISTS clients (
-                            client_id INTEGER PRIMARY KEY,
-                            fullname TEXT NOT NULL,
-                            street TEXT NOT NULL,
-                            zipcode TEXT NOT NULL,
-                            city TEXT NOT NULL,
-                            emailaddress TEXT NOT NULL,
-                            phonenumber TEXT NOT NULL
-                        );
-                        """
-    create_table(conn, sql_client_table)
+    sql = """ 
+            CREATE TABLE IF NOT EXISTS clients (
+                client_id INTEGER PRIMARY KEY,
+                fullname TEXT NOT NULL,
+                street TEXT NOT NULL,
+                zipcode TEXT NOT NULL,
+                city TEXT NOT NULL,
+                emailaddress TEXT NOT NULL,
+                phonenumber TEXT NOT NULL
+            );
+            """
+    create_table(conn, sql)
+
+def create_user(conn, username, password, accesslevel):
+    cursor = conn.cursor()
+    sql = """   INSERT INTO users (username, password, accesslevel)
+                VALUES ("%s", "%s", "%s") """ % (username, password, accesslevel)
+    cursor.execute(sql)
+    conn.commit()
+    print("Value inserted")
+    cursor.close()
+
+
 
 def main():
     conn = create_connection(r"sqlite.db")
