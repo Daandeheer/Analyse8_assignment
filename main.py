@@ -1,4 +1,5 @@
 import abc
+import Db
 
 class User(abc.ABC):
     def __init__(self, username, password):
@@ -24,11 +25,9 @@ class Advisor(User):
 
 
 def main():
-    superadmin = SuperAdmin("User", "Pass")
-    sysadmin = SysAdmin("User", "Pass")
-    advisor = Advisor("User", "Pass")
-    print(superadmin.accessLevel)
-    print(sysadmin.accessLevel)
-    print(advisor.accessLevel)
+    Db.main()
+    
+    
+
 
 main()
