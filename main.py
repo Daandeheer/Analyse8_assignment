@@ -31,18 +31,6 @@ class Advisor(User):
         super().__init__(username, password)
         self.accessLevel = "advisor"
 
-def Option():
-    option = int(input("""  
-            Welcome to the application.\n 
-            Please select an option by entering a number:\n
-            [1] Login\n
-            [2] Password reset\n
-            Your choice: """
-    ))
-    
-    if option == 1:
-        Login()
-
 def Login():
     username = input("Please enter your username: ")
     password = input("Please enter your password: ")
@@ -50,11 +38,12 @@ def Login():
         print("Logged in as super user")
     else:
         print("Login credentials are incorrect. Please try again..")
+        return Login()
 
 
 def main():
     Db.main()
-    Option()
+    Login()
     
 
 main()
