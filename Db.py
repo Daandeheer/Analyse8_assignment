@@ -29,17 +29,31 @@ def create_table(conn, create_table_sql):
         print(e)
 
 def main():
-    sql_user_table = """ CREATE TABLE users (
-                user_id INTEGER PRIMARY KEY,
-                username TEXT NOT NULL,
-                password TEXT NOT NULL,
-                accesslevel TEXT NOT NULL
-            );
-    """
+    sql_user_table = """ CREATE TABLE IF NOT EXISTS users (
+                        user_id INTEGER PRIMARY KEY,
+                        username TEXT NOT NULL,
+                        password TEXT NOT NULL,
+                        accesslevel TEXT NOT NULL
+                    );
+                    """
+
+    sql_client_table = """ CREATE TABLE IF NOT EXISTS clients (
+                            client_id INTEGER PRIMARY KEY,
+                            fullname TEXT NOT NULL,
+                            street TEXT NOT NULL,
+                            zipcode TEXT NOT NULL,
+                            city TEXT NOT NULL,
+                            emailaddress TEXT NOT NULL,
+                            phonenumber TEXT NOT NULL
+                        );
+                        """
+                
 
     conn = create_connection(r"sqlite.db")
     if conn is not None:
         # Create user table
         create_table(conn, sql_user_table)
+        # Create client table
+        create_table(conn, sql_client_table)
 
 
