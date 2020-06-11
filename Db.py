@@ -28,7 +28,7 @@ def create_table(conn, create_table_sql):
     except Error as e:
         print(e)
 
-def main():
+def create_user_table(conn):
     sql_user_table = """ CREATE TABLE IF NOT EXISTS users (
                         user_id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL,
@@ -36,7 +36,9 @@ def main():
                         accesslevel TEXT NOT NULL
                     );
                     """
+    create_table(conn, sql_user_table)
 
+def create_client_table(conn):
     sql_client_table = """ CREATE TABLE IF NOT EXISTS clients (
                             client_id INTEGER PRIMARY KEY,
                             fullname TEXT NOT NULL,
@@ -47,13 +49,12 @@ def main():
                             phonenumber TEXT NOT NULL
                         );
                         """
-                
+    create_table(conn, sql_client_table)
 
+def main():
     conn = create_connection(r"sqlite.db")
     if conn is not None:
-        # Create user table
-        create_table(conn, sql_user_table)
-        # Create client table
-        create_table(conn, sql_client_table)
+        create_user_table(conn)
+        create_client_table(conn)
 
 
