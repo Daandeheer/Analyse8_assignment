@@ -12,6 +12,12 @@ class User(abc.ABC):
         self.username = username
         self.password = password
 
+    def UsernameValidation(self):
+        pass
+
+    def PasswordValidation(self):
+        pass
+
 class SuperAdmin(User):
     def __init__(self, username, password):
         super().__init__(username, password)
@@ -133,6 +139,6 @@ def main():
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
     advisor = Advisor("User", "Pass")
-    test = sysadmin.AddClient()
+    sysadmin.AddClient()
 
 main()
