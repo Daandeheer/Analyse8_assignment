@@ -18,6 +18,7 @@ def create_connection(db_file):
 
 conn = create_connection(r"sqlite.db")
 
+
 def create_table(create_table_sql):
     """ create a table from the create_table_sql statement
     :param conn: Connection object
@@ -31,37 +32,63 @@ def create_table(create_table_sql):
         print(e)
 
 def create_user_table():
-    sql = """ CREATE TABLE IF NOT EXISTS users (
-                        user_id INTEGER PRIMARY KEY,
-                        username TEXT NOT NULL,
-                        password TEXT NOT NULL,
-                        accesslevel TEXT NOT NULL
-                    );
-                    """
+    sql = """   CREATE TABLE IF NOT EXISTS users (
+                    user_id INTEGER PRIMARY KEY,
+                    username TEXT NOT NULL,
+                    password TEXT NOT NULL,
+                    accesslevel TEXT NOT NULL
+                ); """
     create_table(sql)
 
 def create_client_table():
-    sql = """ 
-            CREATE TABLE IF NOT EXISTS clients (
-                client_id INTEGER PRIMARY KEY,
-                fullname TEXT NOT NULL,
-                street TEXT NOT NULL,
-                zipcode TEXT NOT NULL,
-                city TEXT NOT NULL,
-                emailaddress TEXT NOT NULL,
-                phonenumber TEXT NOT NULL
-            );
-            """
+    sql = """   CREATE TABLE IF NOT EXISTS clients (
+                    client_id INTEGER PRIMARY KEY,
+                    fullname TEXT NOT NULL,
+                    street TEXT NOT NULL,
+                    zipcode TEXT NOT NULL,
+                    city TEXT NOT NULL,
+                    emailaddress TEXT NOT NULL,
+                    phonenumber TEXT NOT NULL
+                ); """
     create_table(sql)
 
 def create_user(username, password, accesslevel):
-    cursor = conn.cursor()
     sql = """   INSERT INTO users (username, password, accesslevel)
                 VALUES ("%s", "%s", "%s") """ % (username, password, accesslevel)
+    cursor = conn.cursor()
     cursor.execute(sql)
     conn.commit()
     cursor.close()
 
+def check_username_exists(username):
+    # Checks in the db if the username exists.
+    # In the case that the username does not exist and the username 
+    # is not equal to that of the super admin, the function returns True, 
+    # which makes the program continue.
+    sql = """   SELECT user_id 
+                FROM users 
+                WHERE username="%s" """ % username
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchone()
+
+    if result == None and username != "super":
+        return True
+    else:
+        return False
+
+def create_client(fullname, street, zipcode, city, emailaddress, phonenumber):
+    sql = """   INSERT INTO clients (fullname, street, zipcode, city, emailaddress, phonenumber)
+                VALUES ("%s", "%s", "%s", "%s", "%s", "%s") """ % (fullname, street, zipcode, city, emailaddress, phonenumber)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+    cursor.close()
+
+def auth_login(username, password):
+    sql = """
+
+            """
 
 def main():
     if conn is not None:
