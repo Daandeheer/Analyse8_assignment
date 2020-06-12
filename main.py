@@ -2,10 +2,9 @@ import abc
 import Db
 import re
 
-# extra validation steps:
-# look at capital letters, fails at the moment
-# It is possible to add to spaces next to eachother
-# city needs to be written exactly like in the list
+# regex email
+# regex password --> delete file database, use count
+# regex username --> delete file database, use count
 
 class User(abc.ABC):
     def __init__(self, username, password):
@@ -15,6 +14,7 @@ class User(abc.ABC):
     def UsernameValidation(self):
         pass
 
+    
     def PasswordValidation(self):
         pass
 
@@ -40,7 +40,7 @@ class SysAdmin(User):
 
     def NameValidation(self, clientInput):
         fullName = input(clientInput)
-        output = re.search("^[a-z, \s]{5,31}$", fullName)
+        output = re.search("^[a-zA-Z, \s]{5,31}$", fullName)
         if output == None:
             print("Invalid input: A name requires at least 5 and at most 30 characters, please try again:")
             return self.NameValidation(clientInput)
@@ -49,7 +49,7 @@ class SysAdmin(User):
 
     def StreetValidation(self, clientInput):
         street = input(clientInput)
-        output = re.search("^[a-z, \s]{5,31}\s[1-9]([0-9]{0,3})[a-z]?$", street)
+        output = re.search("^[a-zA-Z, \s]{5,31}\s[1-9]([0-9]{0,3})[a-z]?$", street)
         if output == None:
             print("Invalid input: Street requires at least 5 and at most 30 characters. Also don't forget to include your house number, please try again:")
             return self.StreetValidation(clientInput)
@@ -73,13 +73,13 @@ class SysAdmin(User):
             if re.search(x, city) :
                 return city
             else:
-                print("Invalid input: City don't exist, please choose a city from the list:")
+                print("Invalid input: City don't exist, please choose a city from the list:  (City begins with a capital letter)")
                 return self.CityValidation(clientInput)
 
     # Add regex for email
     def EmailValidation(self, clientInput):
         emailAddress = input(clientInput)
-        output = re.search("",emailAddress)
+        output = re.search("^[0-9a-zA-Z]{2,20}@[a-zA-z]+\.[a-zA-z]{2,10}",emailAddress)
         if output == None:
             print("Invalid input: Use a real email, please try again:")
             return self.EmailValidation(clientInput)
@@ -103,8 +103,8 @@ class SysAdmin(User):
 
 
 
-            # fullName = self.NameValidation("Full name: ")
-            # street = self.StreetValidation("Street: ")
+            fullName = self.NameValidation("Full name: ")
+            street = self.StreetValidation("Street: ")
             # zipCode = self.ZipCodeValidation("Zip code: ")
             # city = self.CityValidation("Choose one of the Citys: ")
             # emailAddress = self.EmailValidation("Email Address: ")
@@ -134,7 +134,7 @@ def Login():
 
 def main():
     Db.main()
-    Login()
+    # Login()
 
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
