@@ -11,8 +11,15 @@ class User(abc.ABC):
         self.username = username
         self.password = password
 
-    def UsernameValidation(self):
-        pass
+    def UsernameValidation(self, userInput):
+        username = input(userInput)
+        output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", username)
+        if output == None:
+            print("Wrong input")
+            return self.UsernameValidation(userInput)
+        else:
+            return username
+        
 
     
     def PasswordValidation(self):
@@ -103,8 +110,8 @@ class SysAdmin(User):
 
 
 
-            fullName = self.NameValidation("Full name: ")
-            street = self.StreetValidation("Street: ")
+            # fullName = self.NameValidation("Full name: ")
+            # street = self.StreetValidation("Street: ")
             # zipCode = self.ZipCodeValidation("Zip code: ")
             # city = self.CityValidation("Choose one of the Citys: ")
             # emailAddress = self.EmailValidation("Email Address: ")
@@ -124,7 +131,7 @@ class Advisor(User):
         self.accessLevel = "advisor"
 
 def Login():
-    username = input("Please enter your username: ")
+    username =  self.User.UsernameValidation("Please enter your username: ")
     password = input("Please enter your password: ")
     if username == superuser.username and password == superuser.password:
         print("Logged in as super user")
@@ -134,7 +141,7 @@ def Login():
 
 def main():
     Db.main()
-    # Login()
+    Login()
 
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
