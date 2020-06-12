@@ -23,9 +23,17 @@ class SuperAdmin(User):
         super().__init__(username, password)
         self.accessLevel = "super admin"
 
-    def createSysAdmin(self, username, password):
-        Db.create_user(username, password, "system admin")
-        print("System admin has been created.")
+    def createSysAdmin(self):
+        username = input("Please enter a username: ")
+        # TODO Username validation
+        if Db.check_username_exists(username):
+            # TODO Password validation
+            password = input("Please enter a password: ")
+            Db.create_user(username, password, "system admin")
+            print("System admin has been created.")
+        else:
+            print("Username already exists. Please enter another username.. ")
+            return self.createSysAdmin()
 
 superuser = SuperAdmin("super", "super")
 
@@ -101,14 +109,14 @@ class SysAdmin(User):
             print('Status: System administrator can add a new Client')
             print('Add the following information to register as a client')
 
+            fullname = self.NameValidation("Full name: ")
+            street = self.StreetValidation("Street: ")
+            zipcode = self.ZipCodeValidation("Zip code: ")
+            city = self.CityValidation("Choose one of the Citys: ")
+            emailaddress = self.EmailValidation("Email Address: ")
+            phonenumber = self.PhoneNumberValidation("Phone Number: ")
 
-
-            # fullName = self.NameValidation("Full name: ")
-            # street = self.StreetValidation("Street: ")
-            # zipCode = self.ZipCodeValidation("Zip code: ")
-            # city = self.CityValidation("Choose one of the Citys: ")
-            # emailAddress = self.EmailValidation("Email Address: ")
-            # phoneNumber = self.PhoneNumberValidation("Phone Number: ")
+            Db.create_client(fullname, street, zipcode, city, emailaddress, phonenumber)
 
 
         elif self.accessLevel == "super admin":
@@ -124,10 +132,10 @@ class Advisor(User):
         self.accessLevel = "advisor"
 
 def Login():
-    username = input("Please enter your username: ")
-    password = input("Please enter your password: ")
-    if username == superuser.username and password == superuser.password:
-        print("Logged in as super user")
+    # username = input("Please enter your username: ")
+    # password = input("Please enter your password: ")
+    if 1 == 1:
+        pass
     else:
         print("Login credentials are incorrect. Please try again..")
         return Login()
@@ -139,6 +147,8 @@ def main():
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
     advisor = Advisor("User", "Pass")
-    sysadmin.AddClient()
+
+    superadmin.createSysAdmin()
+    # sysadmin.AddClient()
 
 main()
