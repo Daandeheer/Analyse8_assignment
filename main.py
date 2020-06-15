@@ -12,10 +12,12 @@ class User(abc.ABC):
         self.password = password
 
     def UsernameValidation(self, userInput):
+        usernameAttemps = 0
         username = input(userInput)
         output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", username)
         if output == None:
             print("Wrong input")
+            usernameAttemps = usernameAttemps + 1
             return self.UsernameValidation(userInput)
         else:
             return username
