@@ -11,19 +11,8 @@ class User(abc.ABC):
         self.username = username
         self.password = password
 
-    def UsernameValidation(self, userInput):
-        usernameAttemps = 0
-        username = input(userInput)
-        output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", username)
-        if output == None:
-            print("Wrong input")
-            usernameAttemps = usernameAttemps + 1
-            return self.UsernameValidation(userInput)
-        else:
-            return username
+    
         
-
-
     def PasswordValidation(self):
         pass
 
@@ -93,7 +82,7 @@ class SysAdmin(User):
                 print("Invalid input: City don't exist, please choose a city from the list:  (City begins with a capital letter)")
                 return self.CityValidation(clientInput)
 
-    # Add regex for email
+    
     def EmailValidation(self, clientInput):
         emailAddress = input(clientInput)
         output = re.search("^[0-9a-zA-Z]{2,20}@[a-zA-z]+\.[a-zA-z]{2,10}",emailAddress)
@@ -140,28 +129,44 @@ class Advisor(User):
         super().__init__(username, password)
         self.accessLevel = "advisor"
 
-def Login():
-    # username = input("Please enter your username: ")
-    # password = input("Please enter your password: ")
-    if 1 == 1:
-        pass
-    username =  self.User.UsernameValidation("Please enter your username: ")
-    password = input("Please enter your password: ")
-    if username == superuser.username and password == superuser.password:
-        print("Logged in as super user")
-    else:
-        print("Login credentials are incorrect. Please try again..")
-        return Login()
+
+class System :
+
+    @staticmethod
+    def Login():
+        username = System.UsernameValidation("Please enter your username: ")
+        password = input("Please enter your password: ")
+        if username == superuser.username and password == superuser.password:
+            print("Logged in as super user")
+        else:
+            print("Login credentials are incorrect. Please try again..")
+            return System.Login()
+    
+    @staticmethod
+    def UsernameValidation(userInput):
+        username = input(userInput)
+        output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", username)
+        if output == None:
+            print("Wrong input")
+            return System.UsernameValidation(userInput)
+        else:
+            return username
+
+
+
+
+
+
 
 def main():
     Db.main()
-    Login()
+    System.Login()
 
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
     advisor = Advisor("User", "Pass")
 
-    superadmin.createSysAdmin()
+    # superadmin.createSysAdmin()
     # sysadmin.AddClient()
 
 main()
