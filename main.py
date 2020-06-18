@@ -11,8 +11,17 @@ class User(abc.ABC):
         self.username = username
         self.password = password
 
-    def UsernameValidation(self):
-        pass
+    def UsernameValidation(self, userInput):
+        usernameAttemps = 0
+        username = input(userInput)
+        output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", username)
+        if output == None:
+            print("Wrong input")
+            usernameAttemps = usernameAttemps + 1
+            return self.UsernameValidation(userInput)
+        else:
+            return username
+        
 
 
     def PasswordValidation(self):
@@ -136,13 +145,17 @@ def Login():
     # password = input("Please enter your password: ")
     if 1 == 1:
         pass
+    username =  self.User.UsernameValidation("Please enter your username: ")
+    password = input("Please enter your password: ")
+    if username == superuser.username and password == superuser.password:
+        print("Logged in as super user")
     else:
         print("Login credentials are incorrect. Please try again..")
         return Login()
 
 def main():
     Db.main()
-    # Login()
+    Login()
 
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
