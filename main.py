@@ -2,9 +2,7 @@ import abc
 import Db
 import re
 
-# regex email
-# regex password --> delete file database, use count
-# regex username --> delete file database, use count
+
 
 class User(abc.ABC):
     def __init__(self, username, password):
@@ -12,10 +10,6 @@ class User(abc.ABC):
         self.password = password
 
     
-        
-    def PasswordValidation(self):
-        pass
-
 class SuperAdmin(User):
     def __init__(self, username, password):
         super().__init__(username, password)
@@ -23,10 +17,10 @@ class SuperAdmin(User):
 
     def createSysAdmin(self):
         username = input("Please enter a username: ")
-        # TODO Username validation
+        System.UsernameValidation(username)
         if Db.check_username_exists(username):
-            # TODO Password validation
             password = input("Please enter a password: ")
+            System.PasswordValidation(password)
             Db.create_user(username, password, "system admin")
             print("System admin has been created.")
         else:
@@ -134,7 +128,7 @@ class System :
 
     @staticmethod
     def Login():
-        username = System.UsernameValidation("Please enter your username: ")
+        username = input("Please enter your username: ")
         password = input("Please enter your password: ")
         if username == superuser.username and password == superuser.password:
             print("Logged in as super user")
@@ -150,11 +144,17 @@ class System :
             print("Wrong input")
             return System.UsernameValidation(userInput)
         else:
-            return username
+            return userInput
 
-
-
-
+    @staticmethod
+    def PasswordValidation(userInput):
+        password = input(userInput)
+        output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", password)
+        if output == None:
+            print("Wrong input")
+            return System.PasswordValidation(userInput)
+        else:
+            return password
 
 
 
@@ -166,7 +166,7 @@ def main():
     sysadmin = SysAdmin("User", "Pass")
     advisor = Advisor("User", "Pass")
 
-    # superadmin.createSysAdmin()
+    superadmin.createSysAdmin()
     # sysadmin.AddClient()
 
 main()
