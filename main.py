@@ -16,11 +16,9 @@ class SuperAdmin(User):
         self.accessLevel = "super admin"
 
     def createSysAdmin(self):
-        username = input("Please enter a username: ")
-        System.UsernameValidation(username)
+        username = System.UsernameValidation("Please enter a username: ")
         if Db.check_username_exists(username):
-            password = input("Please enter a password: ")
-            System.PasswordValidation(password)
+            password = System.PasswordValidation("Please enter a password: ")
             Db.create_user(username, password, "system admin")
             print("System admin has been created.")
         else:
@@ -141,7 +139,7 @@ class System :
         username = input(userInput)
         output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", username)
         if output == None:
-            print("Wrong input")
+            print("Username needs at least 5 characters and must be started with a letter")
             return System.UsernameValidation(userInput)
         else:
             return userInput
@@ -149,9 +147,9 @@ class System :
     @staticmethod
     def PasswordValidation(userInput):
         password = input(userInput)
-        output = re.search("^[a-zA-z][a-zA-Z0-9-_'.]{4,19}$", password)
+        output = re.search("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[+='|\(}){:;<[>,.?~!@#$%^&*_-])[A-Za-z\d+='|\(}){:;<[>,.?~!@#$%^&*_-]{8,30}$", password)
         if output == None:
-            print("Wrong input")
+            print("Password needs at least 8 characters and at least 1 lower and 1 uppercase letter, 1 digit and 1 special character")
             return System.PasswordValidation(userInput)
         else:
             return password
@@ -160,7 +158,7 @@ class System :
 
 def main():
     Db.main()
-    System.Login()
+    # System.Login()
 
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
