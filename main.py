@@ -14,14 +14,13 @@ logger.info("log")
                             
 
 class User(abc.ABC):
-    def __init__(self, username, password):
+    def __init__(self, username):
         self.username = username
-        self.password = password
 
     
 class SuperAdmin(User):
-    def __init__(self, username, password):
-        super().__init__(username, password)
+    def __init__(self, username):
+        super().__init__(username)
         self.accessLevel = "super admin"
 
     def createSysAdmin(self):
@@ -34,11 +33,9 @@ class SuperAdmin(User):
             print("Username already exists. Please enter another username.. ")
             return self.createSysAdmin()
 
-superuser = SuperAdmin("super", "super")
-
 class SysAdmin(User):
-    def __init__(self, username, password):
-        super().__init__(username, password)
+    def __init__(self, username):
+        super().__init__(username)
         self.accessLevel = "system admin"
 
     def createAdvisor(self, username, password):
@@ -126,8 +123,8 @@ class SysAdmin(User):
 
 
 class Advisor(User):
-    def __init__(self, username, password):
-        super().__init__(username, password)
+    def __init__(self, username):
+        super().__init__(username)
         self.accessLevel = "advisor"
 
 
@@ -138,10 +135,17 @@ class System :
         attemps = 0
         username = input("Please enter your username: ")
         password = input("Please enter your password: ")
-        if username == superuser.username and password == superuser.password:
-            print("Logged in as super user")
-        elif attemps == 5:
-            logging.WARNING("To many attemps")
+        result = Db.auth_login(username, password)
+        if result != None:
+            print("Logged in successful!")
+            if result[1] == "super admin":
+                return SuperAdmin(result[0])
+            elif result[1] == "system admin":
+                return SysAdmin(result[0])
+            elif result[1] == "advisor":
+                return Advisor(result[0])
+
+            
         else:
             print("Login credentials are incorrect. Please try again..")
             attemps = attemps + 1
@@ -171,13 +175,9 @@ class System :
 
 def main():
     Db.main()
-    System.Login()
+    Db.create_init_user()
+    loggedin = System.Login()
 
-    superadmin = SuperAdmin("User", "Pass")
-    sysadmin = SysAdmin("User", "Pass")
-    advisor = Advisor("User", "Pass")
-
-    #superadmin.createSysAdmin()
-    # sysadmin.AddClient()
+    # superadmin.createSysAdmin()
 
 main()

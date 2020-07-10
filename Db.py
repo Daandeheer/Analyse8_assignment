@@ -60,6 +60,14 @@ def create_user(username, password, accesslevel):
     conn.commit()
     cursor.close()
 
+def create_init_user():
+    sql = """   INSERT INTO users (username, password, accesslevel)
+                VALUES ("Superuser", "Superpassword1!", "super admin") """
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+    cursor.close()
+
 def check_username_exists(username):
     # Checks in the db if the username exists.
     # In the case that the username does not exist and the username 
@@ -71,8 +79,9 @@ def check_username_exists(username):
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
+    cursor.close()
 
-    if result == None and username != "super":
+    if result == None or username != "super":
         return True
     else:
         return False
@@ -86,9 +95,16 @@ def create_client(fullname, street, zipcode, city, emailaddress, phonenumber):
     cursor.close()
 
 def auth_login(username, password):
-    sql = """
-
-            """
+    sql = """   SELECT username, accesslevel 
+                FROM users
+                WHERE username="%s" and password="%s" """ % (username, password)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+    result = cursor.fetchone()
+    cursor.close()
+    
+    return result
 
 def main():
     if conn is not None:
