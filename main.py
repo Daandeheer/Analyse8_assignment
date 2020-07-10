@@ -74,15 +74,62 @@ class SysAdmin(User):
             return zipCode
 
     def CityValidation(self, clientInput):
-        cityList = ["Amsterdam", "Rotterdam" ,"Maastricht", "Eindhoven", "Den Haag", "Utrecht" ,"Leiden", "Arnhem", "Zwolle","Delft"]
-        print(cityList)
-        city = input(clientInput)
-        for x in cityList:
-            if re.search(x, city) :
-                return city
-            else:
-                print("Invalid input: City don't exist, please choose a city from the list:  (City begins with a capital letter)")
-                return self.CityValidation(clientInput)
+        
+        # cityList = ["Amsterdam", "Rotterdam" ,"Maastricht", "Eindhoven", "Den Haag", "Utrecht" ,"Leiden", "Arnhem", "Zwolle","Delft"]
+        # print(cityList)
+        # city = input(clientInput)
+        # for x in cityList:
+        #     if re.search(x, city) :
+        #         return city
+        print("""
+                        [1] Amsterdam
+                        [2] Rotterdam
+                        [3] Maastricht
+                        [4] Eindhoven
+                        [5] Den Haag
+                        [6] Utrecht
+                        [7] Leiden
+                        [8] Arnhem
+                        [9] Zwolle
+                        [10] Delft
+
+                        """)
+
+        city = input("Please enter a number: ")
+        if (city == "1"):
+            print("City: Amsterdam")
+            return "Amsterdam"
+        elif (city == "2"):
+            print("City: Rotterdam")
+            return "Rotterdam"
+        elif (city == "3"):
+            print("City: Maastricht")
+            return "Maastricht"
+        elif (city == "4"):
+            print("City: Eindhoven")
+            return "Eindhoven"
+        elif (city == "5"):
+            print("City: Den Haag")
+            return "Den Haag"
+        elif (city == "6"):
+            print("City: Utrecht")
+            return "Utrecht"
+        elif (city == "7"):
+            print("City: Leiden")
+            return "Leiden"
+        elif (city == "8"):
+            print("City: Arnhem")
+            return "Arnhem"
+        elif (city == "9"):
+            print("City: Zwolle")
+            return "Zwolle"
+        elif (city == "10"):
+            print("City: Delft")
+            return "Delft"
+        else:
+            print("Invalid input: Number don't exist, please choose a number from the list: ")
+            return self.CityValidation(clientInput)
+                   
 
     
     def EmailValidation(self, clientInput):
@@ -111,7 +158,7 @@ class SysAdmin(User):
         fullname = self.NameValidation("Full name: ")
         street = self.StreetValidation("Streetname: ")
         zipcode = self.ZipCodeValidation("Zip code (format [1111XX]): ")
-        city = self.CityValidation("City: (type the full cityname): ")
+        city = self.CityValidation("City: (choose a number): ")
         emailaddress = self.EmailValidation("Email address: ")
         phonenumber = self.PhoneNumberValidation("Phone Number: (starting with +316)")
 
