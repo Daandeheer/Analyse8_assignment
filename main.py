@@ -9,8 +9,6 @@ logging.basicConfig(filename= "system.log",
                     format = logging_format)
 logger = logging.getLogger()
 
-
-
 class User(abc.ABC):
     def __init__(self, username):
         self.username = username
@@ -25,7 +23,7 @@ class SuperAdmin(User):
         username = System.UsernameValidation("Please enter a username: ")
         if Db.check_username_exists(username):
             password = System.PasswordValidation("Please enter a password: ")
-            Db.create_user(username, password, "system admin")
+            Db.create_user(username, System.encrypt(password, 5), "system admin")
             print("System admin has been created.")
         else:
             print("Username already exists. Please enter another username.. ")
@@ -36,9 +34,16 @@ class SysAdmin(User):
         super().__init__(username)
         self.accessLevel = "system admin"
 
-    def createAdvisor(self, username, password):
-        Db.create_user(username, password, "advisor")
-        print("Advisor has been created.")
+    def createAdvisor(self):
+        print("Creating an advisor. \n \n")
+        username = System.UsernameValidation("Please enter a username: ")
+        if Db.check_username_exists(username):
+            password = System.PasswordValidation("Please enter a password: ")
+            Db.create_user(username, System.encrypt(password, 5), "advisor")
+            print("Advisor has been created.")
+        else:
+            print("Username already exists. Please enter another username.. ")
+            return self.createAdvisor()
 
     def NameValidation(self, clientInput):
         fullName = input(clientInput)
@@ -100,7 +105,7 @@ class SysAdmin(User):
 
     def AddClient(self):
         if self.accessLevel == "system admin":
-            print('Status: System administrator can add a new Client')
+            print("Creating a client. \n \n")
             print('Add the following information to register as a client')
 
             fullname = self.NameValidation("Full name: ")
@@ -132,7 +137,7 @@ class System :
     def Login(attemps=0):
         username = input("Please enter your username: ")
         password = input("Please enter your password: ")
-        result = Db.auth_login(username, password)
+        result = Db.auth_login(username, System.encrypt(password, 5))
         if result != None:
             print("Logged in successful!")
             if result[1] == "super admin":
@@ -142,8 +147,9 @@ class System :
             elif result[1] == "advisor":
                 return Advisor(result[0])
         elif attemps == 2:
-            logger.warning("To many attemps")
-            print("To many attemps, please try again")
+            logger.warning("Too many attemps")
+            print("Too many attemps, please try again later.")
+            return False
         else:
             print("Login credentials are incorrect. Please try again..")
             return System.Login(attemps+1)
@@ -169,21 +175,93 @@ class System :
             return password
 
     @staticmethod
-    def read_log(accessLevel):
-        if accessLevel == "super admin" or accessLevel == "super admin":
-            f = open("system.log", "r")
-            print(f.read())
-        else:
-            print("Status: Advisor has no access to this file")
+    def read_log():
+        print("----------------------------")
+        f = open("system.log", "r")
+        print(f.read())
+        print("----------------------------")
+
+    @staticmethod
+    def encrypt(text, n):
+        result = ""
+        for i in range(len(text)): 
+            char = text[i] 
+  
+            if (char.isupper()): 
+                result = result + chr((ord(char) + n - 65) % 26 + 65) 
+            elif (not char.isalpha()):
+                result = result + char
+            else: 
+                result = result + chr((ord(char) + n - 97) % 26 + 97) 
+  
+        return result 
+
+    @staticmethod
+    def menu():
+        loggedin = False
+        while not loggedin:
+            print("Welcome to the system. Please select an option to continue: \n[1] Login \n[2] Recover password")
+            choice = input("Please select an option: ")
+            if (choice == "1"):
+                user = System.Login()
+                if (user == False):
+                    exit()
+                loggedin = True
+            else:
+                print("That option does not exist (yet). Please try another option.")
+        while loggedin:
+            print("\n Welcome user: %s. Please select one of the following options to continue" % user.username)
+            if (user.accessLevel == "super admin"):
+                print("""
+                        [1] Create system admin
+                        [9] Read log
+                        [0]
+                        """)
+                choice = input("Please enter a number: ")
+                if (choice == "1"):
+                    user.createSysAdmin()
+                elif (choice == "9"):
+                    System.read_log()
+                elif (choice == "0"):
+                    print("Your are now logged off..")
+                    loggedin = False
+            
+            if (user.accessLevel == "system admin"):
+                print("""
+                        [1] Create advisor
+                        [2] Add client
+                        [9] Read log
+                        [0] Logout
+                        """)
+                choice = input("Please enter a number: ")
+                if (choice == "1"):
+                    user.createAdvisor()
+                elif (choice == "2"):
+                    user.AddClient()
+                elif (choice == "9"):
+                    System.read_log()
+                elif (choice == "0"):
+                    print("Your are now logged off..")
+                    loggedin = False
+            
+            if (user.accessLevel == "advisor"):
+                print("""
+                        [0] Logout
+                        """)
+                choice = input("Please enter a number: ")
+                if (choice == "0"):
+                    print("Your are now logged off..")
+                    loggedin = False
+                
+
 
 
 
 def main():
     Db.main()
-    Db.create_init_user()
-    loggedin = System.Login()
-    logged = System.read_log(loggedin.accessLevel)
+    Db.create_init_user(System.encrypt("Superpassword1!", 5))
+    System.menu()
 
-    # superadmin.createSysAdmin()
+
 
 main()

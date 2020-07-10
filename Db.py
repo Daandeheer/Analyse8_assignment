@@ -60,9 +60,9 @@ def create_user(username, password, accesslevel):
     conn.commit()
     cursor.close()
 
-def create_init_user():
+def create_init_user(password):
     sql = """   INSERT INTO users (username, password, accesslevel)
-                VALUES ("Superuser", "Superpassword1!", "super admin") """
+                VALUES ("Superuser1", "%s", "super admin") """ % password
     cursor = conn.cursor()
     cursor.execute(sql)
     conn.commit()
@@ -81,7 +81,7 @@ def check_username_exists(username):
     result = cursor.fetchone()
     cursor.close()
 
-    if result == None or username != "super":
+    if result == None or username != "Superuser1":
         return True
     else:
         return False
