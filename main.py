@@ -169,7 +169,7 @@ class System :
             return password
 
     @staticmethod
-    def read_log(accessLevel):
+    def Read_log(accessLevel):
         if accessLevel == "super admin" or accessLevel == "super admin":
             f = open("system.log", "r")
             print(f.read())
