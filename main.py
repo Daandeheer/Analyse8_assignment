@@ -20,6 +20,7 @@ class SuperAdmin(User):
         self.accessLevel = "super admin"
 
     def createSysAdmin(self):
+        print("Creating a System Administrator..")
         username = System.UsernameValidation("Please enter a username: ")
         if Db.check_username_exists(username):
             password = System.PasswordValidation("Please enter a password: ")
@@ -35,7 +36,7 @@ class SysAdmin(User):
         self.accessLevel = "system admin"
 
     def createAdvisor(self):
-        print("Creating an advisor. \n \n")
+        print("Creating an advisor..")
         username = System.UsernameValidation("Please enter a username: ")
         if Db.check_username_exists(username):
             password = System.PasswordValidation("Please enter a password: ")
@@ -104,25 +105,18 @@ class SysAdmin(User):
 
 
     def AddClient(self):
-        if self.accessLevel == "system admin":
-            print("Creating a client. \n \n")
-            print('Add the following information to register as a client')
+        print("Creating a client..")
+        print('Please enter the following information to register as a client')
 
-            fullname = self.NameValidation("Full name: ")
-            street = self.StreetValidation("Street: ")
-            zipcode = self.ZipCodeValidation("Zip code: ")
-            city = self.CityValidation("Choose one of the Citys: ")
-            emailaddress = self.EmailValidation("Email Address: ")
-            phonenumber = self.PhoneNumberValidation("Phone Number: ")
+        fullname = self.NameValidation("Full name: ")
+        street = self.StreetValidation("Streetname: ")
+        zipcode = self.ZipCodeValidation("Zip code (format [1111XX]): ")
+        city = self.CityValidation("City: (type the full cityname): ")
+        emailaddress = self.EmailValidation("Email address: ")
+        phonenumber = self.PhoneNumberValidation("Phone Number: (starting with +316)")
 
-            Db.create_client(fullname, street, zipcode, city, emailaddress, phonenumber)
-
-
-        elif self.accessLevel == "super admin":
-            print("Status: Super administrator has no access to add a new Client")
-
-        else:
-            print("Status: Advisor has no access to add a new Client")
+        Db.create_client(fullname, street, zipcode, city, emailaddress, phonenumber)
+        print("Client has been registered.")
 
 
 class Advisor(User):
@@ -208,14 +202,14 @@ class System :
                     exit()
                 loggedin = True
             else:
-                print("That option does not exist (yet). Please try another option.")
+                print("---That option does not exist (yet). Please try another option.---")
         while loggedin:
-            print("\n Welcome user: %s. Please select one of the following options to continue" % user.username)
+            print("Welcome user: %s. Please select one of the following options to continue" % user.username)
             if (user.accessLevel == "super admin"):
                 print("""
                         [1] Create system admin
                         [9] Read log
-                        [0]
+                        [0] Logout
                         """)
                 choice = input("Please enter a number: ")
                 if (choice == "1"):
@@ -225,6 +219,8 @@ class System :
                 elif (choice == "0"):
                     print("Your are now logged off..")
                     loggedin = False
+                else:
+                    print("---Input invalid. Please enter a number presented in the menu.---")
             
             if (user.accessLevel == "system admin"):
                 print("""
@@ -243,6 +239,8 @@ class System :
                 elif (choice == "0"):
                     print("Your are now logged off..")
                     loggedin = False
+                else:
+                    print("---Input invalid. Please enter a number presented in the menu.---")
             
             if (user.accessLevel == "advisor"):
                 print("""
@@ -252,6 +250,8 @@ class System :
                 if (choice == "0"):
                     print("Your are now logged off..")
                     loggedin = False
+                else:
+                    print("---Input invalid. Please enter a number presented in the menu.---")
                 
 
 
