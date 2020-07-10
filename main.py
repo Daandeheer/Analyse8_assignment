@@ -2,6 +2,7 @@ import abc
 import Db
 import re
 import logging
+import os
 
 logging_format = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename= "system.log",
@@ -9,7 +10,6 @@ logging.basicConfig(filename= "system.log",
 logger = logging.getLogger()
 
 
-                            
 
 class User(abc.ABC):
     def __init__(self, username):
@@ -168,12 +168,21 @@ class System :
         else:
             return password
 
+    @staticmethod
+    def read_log(accessLevel):
+        if accessLevel == "super admin" or accessLevel == "super admin":
+            f = open("system.log", "r")
+            print(f.read())
+        else:
+            print("Status: Advisor has no access to this file")
+
 
 
 def main():
     Db.main()
     Db.create_init_user()
     loggedin = System.Login()
+    logged = System.read_log(loggedin.accessLevel)
 
     # superadmin.createSysAdmin()
 
