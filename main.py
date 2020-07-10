@@ -10,7 +10,7 @@ logging.basicConfig(filename= "system.log",
                     filemode= 'w')
 logger = logging.getLogger()
 
-logger.info("log")
+
                             
 
 class User(abc.ABC):
@@ -131,8 +131,7 @@ class Advisor(User):
 class System :
     
     @staticmethod
-    def Login():
-        attemps = 0
+    def Login(attemps=0):
         username = input("Please enter your username: ")
         password = input("Please enter your password: ")
         result = Db.auth_login(username, password)
@@ -144,12 +143,11 @@ class System :
                 return SysAdmin(result[0])
             elif result[1] == "advisor":
                 return Advisor(result[0])
-
-            
+        elif attemps == 2:
+            logger.warning("To many attemps")
         else:
             print("Login credentials are incorrect. Please try again..")
-            attemps = attemps + 1
-            return System.Login()
+            return System.Login(attemps+1)
     
     @staticmethod
     def UsernameValidation(userInput):
