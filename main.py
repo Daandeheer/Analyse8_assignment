@@ -1,8 +1,17 @@
 import abc
 import Db
 import re
+import logging
 
+logging_format = "%(levelname)s %(asctime)s - %(message)s"
+logging.basicConfig(filename= "system.log",
+                    level= logging.DEBUG,
+                    format = logging_format,
+                    filemode= 'w')
+logger = logging.getLogger()
 
+logger.info("log")
+                            
 
 class User(abc.ABC):
     def __init__(self, username, password):
@@ -123,15 +132,19 @@ class Advisor(User):
 
 
 class System :
-
+    
     @staticmethod
     def Login():
+        attemps = 0
         username = input("Please enter your username: ")
         password = input("Please enter your password: ")
         if username == superuser.username and password == superuser.password:
             print("Logged in as super user")
+        elif attemps == 5:
+            logging.WARNING("To many attemps")
         else:
             print("Login credentials are incorrect. Please try again..")
+            attemps = attemps + 1
             return System.Login()
     
     @staticmethod
@@ -142,7 +155,7 @@ class System :
             print("Username needs at least 5 characters and must be started with a letter")
             return System.UsernameValidation(userInput)
         else:
-            return userInput
+            return username
 
     @staticmethod
     def PasswordValidation(userInput):
@@ -158,13 +171,13 @@ class System :
 
 def main():
     Db.main()
-    # System.Login()
+    System.Login()
 
     superadmin = SuperAdmin("User", "Pass")
     sysadmin = SysAdmin("User", "Pass")
     advisor = Advisor("User", "Pass")
 
-    superadmin.createSysAdmin()
+    #superadmin.createSysAdmin()
     # sysadmin.AddClient()
 
 main()
