@@ -5,9 +5,7 @@ import logging
 
 logging_format = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename= "system.log",
-                    level= logging.DEBUG,
-                    format = logging_format,
-                    filemode= 'w')
+                    format = logging_format)
 logger = logging.getLogger()
 
 
@@ -145,6 +143,7 @@ class System :
                 return Advisor(result[0])
         elif attemps == 2:
             logger.warning("To many attemps")
+            print("To many attemps, please try again")
         else:
             print("Login credentials are incorrect. Please try again..")
             return System.Login(attemps+1)
